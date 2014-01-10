@@ -12,12 +12,8 @@ shinyUI(pageWithSidebar(
   
   sidebarPanel(
     
-    HTML("<center><h4>Note:</h4> Please reload the web page any time the app crashes. 
- <strong> When it crashes the screen turns into grey.</strong> If it only stops reacting it may be because of 
-heavy computation or traffic on the server, in which case you simply wait. This is a test version. </h4>
-         </center>"),
-    
-    HTML("<br>"),    
+    HTML("<center><h4>Please first read the notes below</h4>"),
+    HTML("<hr>"),    
     
     ###########################################################    
     # STEP 2.1: read the data
@@ -29,20 +25,16 @@ heavy computation or traffic on the server, in which case you simply wait. This 
                 c("Financial Sector Stocks", "Tech Sector Stocks", "All Stocks  (slow...)"),multiple = FALSE),
     HTML("<hr>"),
     HTML("<hr>"),
-    checkboxInput("load_choice", "Do you want to load your own data? (pre-loaded is recommended for testing the App)"),
+    checkboxInput("load_choice", "Load your own data (requires fast internet connection)"),
     HTML("<br>"),
-    HTML("<center> Choose a data file (a <strong>.csv file in the format of the case with the columns being the stock/asset returns and the rows the days/time periods, with the first row being the dates
-         in format `2003-01-03` and the first column being the names of the stocks e.g. `AMD` </strong>) to Upload (requires fast internet connection).</center>"),    
-    HTML("<br>"),    
     fileInput('datafile_name', ''),
-    HTML("<strong>Note:</strong>. if you load your own data you need to keep the selection of the radio button above on. Otherwise to use the pre-loaded data you must uncheck the radio button"),    
     HTML("<hr>"),
     
     ###########################################################
     # STEP 2.2: read the INPUTS. 
     # THESE ARE THE *SAME* INPUT PARAMETERS AS IN THE RunStudy.R
     
-    numericInput("start_date", "Select Starting date (1 to number of days):", 1),
+    numericInput("start_date", "Select Starting date (use the arrows or type a number from 1 to the number of days):", 1),
     numericInput("end_date", "Select End date (more than starting date, less than total number of dates):", 2586),
     numericInput("numb_components_used", "Select the number of PCA risk factors (between 1 and the total number of stocks):", 3),
     
@@ -55,7 +47,20 @@ heavy computation or traffic on the server, in which case you simply wait. This 
     HTML("<hr>"),
     HTML("<h4>Download the new HTML5 slides </h4>"),
     downloadButton('slide', label = "Download"),
-    HTML("<hr>")
+    HTML("<hr>"),
+    
+    HTML("<h4>Notes:</h4>"),
+    HTML("<br>"),    
+    HTML("If you load a data file, it should be a <strong>.csv file in the format of the case with the columns being the stock/asset returns and the rows the days/time periods, with the first row being the dates
+         in format `2003-01-03` and the first column being the names of the stocks e.g. `AMD` </strong>"),    
+    HTML("<br>"),    
+    HTML("<br>"),    
+    HTML("If you load your own data you need to keep the selection of the `Load your data` button above on. Otherwise, to use the pre-loaded data you must unselect that button"),    
+    HTML("<br>"),    
+    HTML("<br>"),    
+    HTML("Please reload the web page any time the app crashes. <strong> When it crashes the screen turns into grey.</strong> If it only stops reacting it may be because of 
+heavy computation or traffic on the server, in which case you should simply wait. This is a test version.</center>"),    
+    HTML("<hr>")    
     
   ),
   
@@ -165,7 +170,7 @@ heavy computation or traffic on the server, in which case you simply wait. This 
                    div(class="span6",tableOutput("both_markets_pnl_matrix"))                   
                )
       ),               
-            
+      
       tabPanel("Eigenvalues Plot", plotOutput("eigen_plot")),
       
       tabPanel("Eigenvector Returns",                
