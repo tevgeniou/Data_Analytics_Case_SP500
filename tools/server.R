@@ -8,7 +8,6 @@ shinyServer(function(input, output,session) {
   
   ############################################################
   # STEP 1: Read the data 
-  csv_format <- 1
   read_dataset <- reactive({
     input$datafile_name_coded
     input$datafile_name
@@ -21,19 +20,7 @@ shinyServer(function(input, output,session) {
       ProjectData <- TechData
     if (input$datafile_name_coded == "All Stocks (slow...)")
       ProjectData <- MarketData
-    
-    
-    if (!is.null(input$datafile_name) & input$load_choice)    
-    { 
-      csv_format <- 1
-      ProjectData <- read.csv(input$datafile_name$datapath, sep=";", dec=",")
-      if (!is.character(colnames(ProjectData)[1]) | !is.character(rownames(ProjectData)[1])){ 
-        ProjectData <- 0*ProjectData
-        csv_format = 0
-      }
-      #if (!is.null(input$datafile_name))    
-      #  load(inFile()$datapath) # this contains only the matrix ProjectData  
-    }
+
     ProjectData
   })
   
@@ -94,8 +81,6 @@ shinyServer(function(input, output,session) {
     colnames(allparameters)<-NULL
     allparameters<-as.data.frame(allparameters)
     
-    if (!csv_format)
-      allparameters = matrix(c("The Data Loaded as Not in right format"),ncol=1)
     allparameters
   })
   
@@ -304,7 +289,7 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
+    input$order_criterion
     
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
@@ -312,7 +297,13 @@ shinyServer(function(input, output,session) {
     use_mean_alpha <- all_inputs$use_mean_alpha
     
     use_stock = max(1, min(input$stock_order, ncol(ProjectData)))
-    tmp=apply(ProjectData,2,sum)
+    if (input$order_criterion == "returns")
+      tmp=apply(ProjectData,2,sum)
+    if (input$order_criterion == "sharpe")
+      tmp=apply(ProjectData,2,sharpe)
+    if (input$order_criterion == "drawdown")
+      tmp=apply(ProjectData,2,function(r) -drawdown(r))
+
     chosen_id=sort(tmp,decreasing=TRUE,index.return=TRUE)$ix[use_stock]
     chosen_stock=ProjectData[,chosen_id,drop=F]
     rownames(chosen_stock)<-rownames(ProjectData)
