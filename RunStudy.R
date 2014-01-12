@@ -42,7 +42,7 @@ use_mean_alpha <- 0
 # 1: start application on LOCAL computer, 0: do not start it
 # SELECT 0 if you are running the application on a server 
 # (DEFAULT is 0). 
-start_local_webapp <- 1
+start_local_webapp <- 0
 
 ################################################
 # Now run everything
