@@ -185,7 +185,9 @@ shinyServer(function(input, output,session) {
   # Now pass to ui.R what it needs to display this tab
   output$histogram<-renderPlot({   
     data_used <- the_histogram_tab()
-    hist(data_used,main="Histogram of All Daily Stock Returns",xlab="Daily Stock Returns (%)", breaks=200)
+    hist(data_used,main=paste(paste(paste("Histogram of All Daily Stock Returns from ",
+                                          head(rownames(data_used),1), sep=""), "to ", sep=""),
+                              tail(rownames(data_used),1),sep=""),xlab="Daily Stock Returns (%)", breaks=200)
   })
   
   ########## The Market Tab
@@ -221,6 +223,32 @@ shinyServer(function(input, output,session) {
     data_used = the_market_tab()
     pnl_matrix(data_used/100)
   })
+  
+  
+  ########## The Market Histogram Tab
+  
+  # first the reactive function doing all calculations when the related inputs were modified by the user
+  
+  # (this is not necessary, but keeping it for consistency)
+  the_market_histogram_tab<-reactive({
+    # list the user inputs the tab depends on (easier to read the code)
+    input$datafile_name_coded
+    input$datafile_name
+    input$start_date
+    input$end_date
+    input$numb_components_used
+    
+    data_used = the_market_tab()    
+  })
+  
+  # Now pass to ui.R what it needs to display this tab
+  output$histogram_market <- renderPlot({  
+    data_used = the_market_histogram_tab()
+    hist(data_used,main=paste(paste(paste("Histogram of Market Daily Returns from ",
+                                          head(rownames(data_used),1), sep=""), "to ", sep=""),
+                              tail(rownames(data_used),1),sep=""),xlab="Daily Market Returns (%)", breaks=200)
+  })
+  
   
   ########## The Market Mean-Reversion Tab
   

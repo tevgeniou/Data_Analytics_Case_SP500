@@ -95,7 +95,7 @@ heavy computation or traffic on the server, in which case you should simply wait
                )
       ),
       
-      tabPanel("Histogram", plotOutput('histogram')),
+      tabPanel("Histogram: All Stocks", plotOutput('histogram')),
       
       tabPanel("The Market", 
                div(class="row-fluid",
@@ -106,6 +106,8 @@ heavy computation or traffic on the server, in which case you should simply wait
                    div(class="span6",tableOutput("market_pnl_matrix"))                   
                )
       ),
+
+      tabPanel("Histogram: Market", plotOutput('histogram_market')),
       
       tabPanel("Market Mean Reversion", 
                div(class="row-fluid",
