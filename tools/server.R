@@ -1,4 +1,20 @@
 
+
+if (!exists("local_directory")) {  
+  local_directory <- "~/Data_Analytics_Case_SP500" 
+  source(paste(local_directory,"R/library.R",sep="/"))
+  source(paste(local_directory,"R/heatmapOutput.R",sep="/"))
+} 
+
+
+# load all files in the data directory to have them available locally
+load(paste(local_directory,"data/FinancialsData",sep="/"))
+FinancialsData <- ProjectData
+load(paste(local_directory,"data/TechData",sep="/"))
+TechData <- ProjectData
+load(paste(local_directory,"data/DefaultData",sep="/"))
+MarketData <- ProjectData
+
 # To be able to upload data up to 30MB
 options(shiny.maxRequestSize=30*1024^2)
 options(rgl.useNULL=TRUE)
@@ -20,7 +36,7 @@ shinyServer(function(input, output,session) {
       ProjectData <- TechData
     if (input$datafile_name_coded == "All Stocks (slow...)")
       ProjectData <- MarketData
-
+    
     ProjectData
   })
   
@@ -303,7 +319,7 @@ shinyServer(function(input, output,session) {
       tmp=apply(ProjectData,2,sharpe)
     if (input$order_criterion == "drawdown")
       tmp=apply(ProjectData,2,function(r) -drawdown(r))
-
+    
     chosen_id=sort(tmp,decreasing=TRUE,index.return=TRUE)$ix[use_stock]
     chosen_stock=ProjectData[,chosen_id,drop=F]
     rownames(chosen_stock)<-rownames(ProjectData)
@@ -526,7 +542,7 @@ shinyServer(function(input, output,session) {
       unlink("assets", recursive=TRUE)      
       unlink("figures", recursive=TRUE)      
       
-      file.copy("../doc/SP500_Report.Rmd",filename.Rmd,overwrite=T)
+      file.copy(paste(local_directory,"doc/SP500_Report.Rmd",sep="/"),filename.Rmd,overwrite=T)
       out = knit2html(filename.Rmd,quiet=TRUE)
       
       unlink(".cache", recursive=TRUE)      
@@ -568,7 +584,7 @@ shinyServer(function(input, output,session) {
       unlink("assets", recursive=TRUE)    
       unlink("figures", recursive=TRUE)      
       
-      file.copy("../doc/SP500_Slides.Rmd",filename.Rmd,overwrite=T)
+      file.copy(paste(local_directory,"doc/SP500_Slides.Rmd",sep="/"),filename.Rmd,overwrite=T)
       slidify(filename.Rmd)
       
       unlink(".cache", recursive=TRUE)     
