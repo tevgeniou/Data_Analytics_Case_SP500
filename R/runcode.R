@@ -1,6 +1,4 @@
 
-source("R/heatmapOutput.R")
-
 ProjectData = ProjectData[start_date:end_date, stocks_used]
 
 ######################################################################
@@ -9,18 +7,19 @@ ProjectData = ProjectData[start_date:end_date, stocks_used]
 unlink( "TMPdirSlides", recursive = TRUE )      
 dir.create( "TMPdirSlides" )
 setwd( "TMPdirSlides" )
-file.copy( "../doc/SP500_Slides.Rmd","SP500_Slides.Rmd", overwrite = T )
+file.copy( paste(local_directory,"doc/SP500_Slides.Rmd", sep="/"),"SP500_Slides.Rmd", overwrite = T )
+file.copy( paste(local_directory,"doc/All3.png", sep="/"),"All3.png", overwrite = T )
 slidify( "SP500_Slides.Rmd" )
-file.copy( 'SP500_Slides.html', "../doc/SP500_Slides.html", overwrite = T )
+file.copy( 'SP500_Slides.html', paste(local_directory,"doc/SP500_Slides.html", sep="/"), overwrite = T )
 setwd( "../" )
 unlink( "TMPdirSlides", recursive = TRUE )      
 
 unlink( "TMPdirReport", recursive = TRUE )      
 dir.create( "TMPdirReport" )
 setwd( "TMPdirReport" )
-file.copy( "../doc/SP500_Report.Rmd","SP500_Report.Rmd", overwrite = T )
+file.copy( paste(local_directory,"doc/SP500_Report.Rmd", sep="/"),"SP500_Report.Rmd", overwrite = T )
 knit2html( 'SP500_Report.Rmd', quiet = TRUE )
-file.copy( 'SP500_Report.html', "../doc/SP500_Report.html", overwrite = T )
+file.copy( 'SP500_Report.html', paste(local_directory,"doc/SP500_Report.html", sep="/"), overwrite = T )
 setwd( "../" )
 unlink( "TMPdirReport", recursive = TRUE )      
 

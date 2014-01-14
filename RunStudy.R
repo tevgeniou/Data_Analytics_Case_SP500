@@ -12,6 +12,8 @@ rm(list = ls()) # clean up the workspace
 # type in the Console below help(getwd) and help(setwd) for more information
 local_directory <- getwd()
 
+cat("\n *********\n WORKING DIRECTORY IS ", local_directory, "\n PLEASE CHANGE IT IF IT IS NOT CORRECT using setwd(..) - type help(setwd) for more information \n *********")
+
 # Please ENTER the name of the file with the data used. The file should contain a matrix with one row per observation (e.g. person) and one column per attribute. THE NAME OF THIS MATRIX NEEDS TO BE ProjectData (otherwise you will need to replace the name of the ProjectData variable below with whatever your variable name is, which you can see in your Workspace window after you load your file)
 datafile_name <- "DefaultData" # this is the default name of the data for a project
 
@@ -46,8 +48,9 @@ start_local_webapp <- 0
 
 ################################################
 # Now run everything
-source("R/library.R")
-source("R/runcode.R")
+source(paste(local_directory,"R/library.R", sep="/"))
+source(paste(local_directory,"R/heatmapOutput.R", sep = "/"))
+source(paste(local_directory,"R/runcode.R", sep = "/"))
 
 if (start_local_webapp)
   runApp("tools")
