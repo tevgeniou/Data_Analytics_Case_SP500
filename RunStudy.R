@@ -46,6 +46,7 @@ start_local_webapp <- 0
 
 ################################################
 # Now run everything
+source("R/library.R")
 source("R/runcode.R")
 
 if (start_local_webapp)

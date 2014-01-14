@@ -1,5 +1,4 @@
 
-source("R/library.R")
 source("R/heatmapOutput.R")
 
 ProjectData = ProjectData[start_date:end_date, stocks_used]
