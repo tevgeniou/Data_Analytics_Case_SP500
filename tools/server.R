@@ -540,9 +540,9 @@ shinyServer(function(input, output,session) {
     
     content = function(file) {
       
-      filename.Rmd <- paste('SP500_Report', 'Rmd', sep=".")
-      filename.md <- paste('SP500_Report', 'md', sep=".")
-      filename.html <- paste('SP500_Report', 'html', sep=".")
+      filename.Rmd <- paste(local_directory, 'tools/SP500_Report.Rmd', sep="/")
+      filename.md <- paste(local_directory, 'tools/SP500_Report.md', sep="/")
+      filename.html <- paste(local_directory, 'tools/SP500_Report.html', sep="/")
       
       #############################################################
       # All the (SAME) parameters that the report takes from RunStudy.R
@@ -557,16 +557,16 @@ shinyServer(function(input, output,session) {
       
       if (file.exists(filename.html))
         file.remove(filename.html)
-      unlink(".cache", recursive=TRUE)      
-      unlink("assets", recursive=TRUE)      
-      unlink("figures", recursive=TRUE)      
+      unlink(paste(local_directory, 'tools/.cache', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/assets', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/figures', sep="/"), recursive=TRUE)
       
       file.copy(paste(local_directory,"doc/SP500_Report.Rmd",sep="/"),filename.Rmd,overwrite=T)
       out = knit2html(filename.Rmd,quiet=TRUE)
       
-      unlink(".cache", recursive=TRUE)      
-      unlink("assets", recursive=TRUE)      
-      unlink("figures", recursive=TRUE)      
+      unlink(paste(local_directory, 'tools/.cache', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/assets', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/figures', sep="/"), recursive=TRUE)
       file.remove(filename.Rmd)
       file.remove(filename.md)
       
@@ -582,10 +582,10 @@ shinyServer(function(input, output,session) {
     
     content = function(file) {
       
-      filename.Rmd <- paste('SP500_Slides', 'Rmd', sep=".")
-      filename.md <- paste('SP500_Slides', 'md', sep=".")
-      filename.html <- paste('SP500_Slides', 'html', sep=".")
-      
+      filename.Rmd <- paste(local_directory, 'tools/SP500_Slides.Rmd', sep="/")
+      filename.md <- paste(local_directory, 'tools/SP500_Slides.md', sep="/")
+      filename.html <- paste(local_directory, 'tools/SP500_Slides.html', sep="/")
+
       #############################################################
       # All the (SAME) parameters that the report takes from RunStudy.R
       reporting_data<- the_slides_and_report()
@@ -599,16 +599,16 @@ shinyServer(function(input, output,session) {
       
       if (file.exists(filename.html))
         file.remove(filename.html)
-      unlink(".cache", recursive=TRUE)     
-      unlink("assets", recursive=TRUE)    
-      unlink("figures", recursive=TRUE)      
+      unlink(paste(local_directory, 'tools/.cache', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/assets', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/figures', sep="/"), recursive=TRUE)
       
       file.copy(paste(local_directory,"doc/SP500_Slides.Rmd",sep="/"),filename.Rmd,overwrite=T)
       slidify(filename.Rmd)
       
-      unlink(".cache", recursive=TRUE)     
-      unlink("assets", recursive=TRUE)    
-      unlink("figures", recursive=TRUE)      
+      unlink(paste(local_directory, 'tools/.cache', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/assets', sep="/"), recursive=TRUE)
+      unlink(paste(local_directory, 'tools/figures', sep="/"), recursive=TRUE)
       file.remove(filename.Rmd)
       file.remove(filename.md)
       file.rename(filename.html, file) # move pdf to file for downloading      
