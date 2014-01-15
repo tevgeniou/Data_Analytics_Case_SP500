@@ -1,8 +1,18 @@
 
-ProjectData = ProjectData[start_date:end_date, stocks_used]
 
 ######################################################################
 # generate the report, slides, and if needed start the web application
+
+unlink( "TMPdirReport", recursive = TRUE )      
+dir.create( "TMPdirReport" )
+setwd( "TMPdirReport" )
+file.copy( paste(local_directory,"doc/SP500_Report.Rmd", sep="/"),"SP500_Report.Rmd", overwrite = T )
+knit2html( 'SP500_Report.Rmd', quiet = TRUE )
+file.copy( 'SP500_Report.html', paste(local_directory,"doc/SP500_Report.html", sep="/"), overwrite = T )
+setwd( "../" )
+unlink( "TMPdirReport", recursive = TRUE )      
+
+
 
 unlink( "TMPdirSlides", recursive = TRUE )      
 dir.create( "TMPdirSlides" )
@@ -14,14 +24,4 @@ file.copy( 'SP500_Slides.html', paste(local_directory,"doc/SP500_Slides.html", s
 setwd( "../" )
 unlink( "TMPdirSlides", recursive = TRUE )      
 
-unlink( "TMPdirReport", recursive = TRUE )      
-dir.create( "TMPdirReport" )
-setwd( "TMPdirReport" )
-file.copy( paste(local_directory,"doc/SP500_Report.Rmd", sep="/"),"SP500_Report.Rmd", overwrite = T )
-knit2html( 'SP500_Report.Rmd', quiet = TRUE )
-file.copy( 'SP500_Report.html', paste(local_directory,"doc/SP500_Report.html", sep="/"), overwrite = T )
-setwd( "../" )
-unlink( "TMPdirReport", recursive = TRUE )      
-
-##########################
 

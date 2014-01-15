@@ -65,6 +65,9 @@ if (start_local_webapp){
   if (require(shiny-incubator) == FALSE) 
     install_github("shiny-incubator", "rstudio")
   
+  # first load the data files in the data directory so that the App see them
+  ProjectData = ProjectData[start_date:end_date, stocks_used]
+
   # now run the app
   runApp(paste(local_directory,"tools", sep="/"))  
 }
