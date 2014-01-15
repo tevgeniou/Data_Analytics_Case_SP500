@@ -44,14 +44,27 @@ use_mean_alpha <- 0
 # 1: start application on LOCAL computer, 0: do not start it
 # SELECT 0 if you are running the application on a server 
 # (DEFAULT is 0). 
+# NOTE: You need to make sure the shiny library is installing (see below)
 start_local_webapp <- 0
 
 ################################################
 # Now run everything
+
 source(paste(local_directory,"R/library.R", sep="/"))
 source(paste(local_directory,"R/heatmapOutput.R", sep = "/"))
 source(paste(local_directory,"R/runcode.R", sep = "/"))
 
-if (start_local_webapp)
-  runApp("tools")
-
+if (start_local_webapp){
+  
+  # MAKE SURE THIS INSTALLS FINE if a local web app is to be use - the local computer needs
+  # to have the shiny library to run the shiny apps
+  if (require(shiny) == FALSE) 
+    install_libraries("shiny")
+  if (require(shinyRGL) == FALSE) 
+    install_github("shinyRGL", "trestletech")
+  if (require(shiny-incubator) == FALSE) 
+    install_github("shiny-incubator", "rstudio")
+  
+  # now run the app
+  runApp(paste(local_directory,"tools", sep="/"))  
+}

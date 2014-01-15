@@ -9,7 +9,7 @@ get_libraries <- function(filenames_list) {
   })
 }
 
-libraries_used=c("devtools","shiny","knitr","graphics","reshape2","RJSONIO","grDevices","xtable","FactoMineR")
+libraries_used=c("devtools","knitr","graphics","reshape2","RJSONIO","grDevices","xtable","FactoMineR")
 get_libraries(libraries_used)
 
 if (require(slidifyLibraries) == FALSE) 
@@ -18,10 +18,6 @@ if (require(slidify) == FALSE)
   install_github("slidify", "ramnathv") 
 if (require(rCharts) == FALSE) 
   install_github('rCharts', 'ramnathv')
-if (require(shinyRGL) == FALSE) 
-  install_github("shinyRGL", "trestletech")
-if (require(shiny-incubator) == FALSE) 
-  install_github("shiny-incubator", "rstudio")
 
 
 ########################################################
