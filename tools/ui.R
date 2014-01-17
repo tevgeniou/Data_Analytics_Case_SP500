@@ -67,6 +67,8 @@ shinyUI(pageWithSidebar(
                                          All returns reported correspond to returns if 1 dollar is invested every day from-close-to-close. No transaction costs included.")),
                    tags$hr(),
                    tags$hr(),
+                   actionButton("action_parameters", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Summary of Key Parameters")),
                    tags$hr(),
                    tableOutput('parameters')
@@ -77,6 +79,8 @@ shinyUI(pageWithSidebar(
                div(class="row-fluid",
                    selectInput("order_criterion", "Select the criterion used to order the stocks:", choices=c("returns","sharpe","drawdown"), selected="returns", multiple=FALSE),
                    numericInput("stock_order", "Select the stock to plot (e.g. 1 is the best in terms of the selected criterion during this period, 2 is second best, etc):", 1),
+                   actionButton("action_order_stocks", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Cumulative Returns and Table of Returns (below)")),
                    div(class="span12",plotOutput('chosen_stock')), 
                    tags$hr(),
@@ -88,6 +92,8 @@ shinyUI(pageWithSidebar(
                div(class="row-fluid",
                    div(class="span12",h4("Select Stock")),
                    textInput("ind_stock", "Select the ticker of the stock to show (use capital letters e.g. AAPL):", "AAPL"),
+                   actionButton("action_select_stock", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Cumulative Returns and Table of Returns (Below) of Selected Stock")),
                    div(class="span12",plotOutput('stock_returns')), 
                    tags$hr(),
@@ -95,24 +101,34 @@ shinyUI(pageWithSidebar(
                )
       ),
       
-      tabPanel("Histogram: All Stocks", plotOutput('histogram')),
+      tabPanel("Histogram: All Stocks", 
+               actionButton("action_histogram_all", "Show/Update Results"),
+               HTML("<br>"),
+               plotOutput('histogram')),
       
       tabPanel("The Market", 
                div(class="row-fluid",
                    div(class="span12",h4("The Equally Weighted Basket of all Stocks")),
                    div(class="span12",h5("NOTE: All returns reported correspond to returns if 1 dollar is invested every day from-close-to-close. No transaction costs included.")),
+                   actionButton("action_market", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Cumulative Returns and Table of Returns (below)")),
                    div(class="span12",plotOutput('market')), 
                    div(class="span6",tableOutput("market_pnl_matrix"))                   
                )
       ),
       
-      tabPanel("Histogram: Market", plotOutput('histogram_market')),
+      tabPanel("Histogram: Market", 
+               actionButton("action_histogram_market", "Show/Update Results"),
+               HTML("<br>"),
+               plotOutput('histogram_market')),
       
       tabPanel("Market Mean Reversion", 
                div(class="row-fluid",
                    div(class="span12",h4("Mean Reversion Strategy of Equal Weighted Basket of all Stocks")),
                    div(class="span12",h5("NOTE: All returns reported correspond to returns if 1 dollar is invested every day from-close-to-close. No transaction costs included.")),
+                   actionButton("action_market_mr", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Cumulative Returns and Table of Returns (below)")),
                    div(class="span12",plotOutput('mr_strategy')), 
                    div(class="span6",tableOutput("mr_strategy_pnl_matrix"))                   
@@ -124,17 +140,24 @@ shinyUI(pageWithSidebar(
                div(class="row-fluid",
                    div(class="span12",h4("Mean Reversion Strategy of Equal Weighted Basket of all Stocks only days after the market dropped")),
                    div(class="span12",h5("NOTE: All returns reported correspond to returns if 1 dollar is invested every day from-close-to-close. No transaction costs included.")),
+                   actionButton("action_market_mr_neg", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Cumulative Returns and Table of Returns (below)")),
                    div(class="span12",plotOutput('both_markets')), 
                    div(class="span6",tableOutput("both_markets_pnl_matrix"))                   
                )
       ),               
       
-      tabPanel("Eigenvalues Plot", plotOutput("eigen_plot")),
+      tabPanel("Eigenvalues Plot", 
+               actionButton("action_eigenvalues", "Show/Update Results"),
+               HTML("<br>"),
+               plotOutput("eigen_plot")),
       
       tabPanel("Eigenvector Returns",                
                div(class="row-fluid",
                    numericInput("vector_plotted", "Select the eigenvector to plot (e.g.1):", 1),
+                   actionButton("action_eigenvector", "Show/Update Results"),
+                   HTML("<br>"),
                    div(class="span12",h4("Cumulative Returns and Table of Returns (below)")),
                    div(class="span12",plotOutput('eigen_returns')), 
                    div(class="span6",tableOutput("eigen_strategy_pnl_matrix"))                   
@@ -143,11 +166,19 @@ shinyUI(pageWithSidebar(
       
       tabPanel("Ordered Residuals", 
                numericInput("residuals_order", "Select the stock to plot residuals portfolio for (e.g. 1 is the best, 2 is second best, etc):", 1),
+               actionButton("action_ordered_res", "Show/Update Results"),
+               HTML("<br>"),
                div(class="span12",plotOutput('chosen_residual'))), 
       
-      tabPanel("Residuals Market", plotOutput('res_market')),
+      tabPanel("Residuals Market", 
+               actionButton("action_market_res", "Show/Update Results"),
+               HTML("<br>"),
+               plotOutput('res_market')),
       
-      tabPanel("Residuals Hindsight Portfolio", plotOutput('res_hindsight')) 
+      tabPanel("Residuals Hindsight Portfolio", 
+               actionButton("action_hindsight", "Show/Update Results"),
+               HTML("<br>"),
+               plotOutput('res_hindsight')) 
       
     )
   )

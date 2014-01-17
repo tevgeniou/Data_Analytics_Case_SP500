@@ -72,6 +72,7 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
+    input$action_parameters
     
     
     all_inputs <- user_inputs()
@@ -96,6 +97,54 @@ shinyServer(function(input, output,session) {
     the_parameters_tab()
   })
   
+  ########## The Ordered Stocks Tab
+  
+  # first the reactive function doing all calculations when the related inputs were modified by the user
+  
+  the_ordered_stocks_tab<-reactive({
+    # list the user inputs the tab depends on (easier to read the code)
+    input$datafile_name_coded
+    input$datafile_name
+    input$start_date
+    input$end_date
+    input$numb_components_used
+    input$order_criterion
+    input$action_order_stocks
+    
+    all_inputs <- user_inputs()
+    ProjectData <-  all_inputs$ProjectData
+    numb_components_used <- all_inputs$numb_components_used
+    use_mean_alpha <- all_inputs$use_mean_alpha
+    
+    use_stock = max(1, min(input$stock_order, ncol(ProjectData)))
+    if (input$order_criterion == "returns")
+      tmp=apply(ProjectData,2,sum)
+    if (input$order_criterion == "sharpe")
+      tmp=apply(ProjectData,2,sharpe)
+    if (input$order_criterion == "drawdown")
+      tmp=apply(ProjectData,2,function(r) -drawdown(r))
+    
+    chosen_id=sort(tmp,decreasing=TRUE,index.return=TRUE)$ix[use_stock]
+    chosen_stock=ProjectData[,chosen_id,drop=F]
+    rownames(chosen_stock)<-rownames(ProjectData)
+    chosen_stock
+  })
+  
+  # Now pass to ui.R what it needs to display this tab
+  output$chosen_stock <- renderPlot({  
+    input$action_order_stocks
+    
+    chosen_stock=the_ordered_stocks_tab()
+    pnl_plot(chosen_stock)
+  })
+  
+  output$chosen_stock_pnl_matrix <- renderHeatmap({    
+    input$action_order_stocks
+
+    chosen_stock=the_ordered_stocks_tab()
+    pnl_matrix(chosen_stock/100)
+  })
+  
   ########## The Single Stocks Tab
   
   # first the reactive function doing all calculations when the related inputs were modified by the user
@@ -106,8 +155,8 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
-    
+    input$action_select_stock
+        
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
     numb_components_used <- all_inputs$numb_components_used
@@ -126,6 +175,8 @@ shinyServer(function(input, output,session) {
   
   # Now pass to ui.R what it needs to display this tab
   output$stock_returns <- renderPlot({        
+    input$action_select_stock
+    
     data_used = the_single_stocks_tab()
     all_inputs <- user_inputs()
     
@@ -139,6 +190,8 @@ shinyServer(function(input, output,session) {
   })
   
   output$stock_pnl_matrix<-renderHeatmap({ 
+    input$action_select_stock
+    
     data_used = the_single_stocks_tab()
     all_inputs <- user_inputs()
     if ( is.null(data_used) ){ 
@@ -163,7 +216,7 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
+    input$action_histogram_all
     
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
@@ -175,6 +228,7 @@ shinyServer(function(input, output,session) {
   
   # Now pass to ui.R what it needs to display this tab
   output$histogram<-renderPlot({   
+    input$action_histogram_all
     data_used <- the_histogram_tab()
     hist(data_used,main=paste(paste(paste("Histogram of All Daily Stock Returns from ",
                                           head(rownames(data_used),1), sep=""), "to ", sep=""),
@@ -192,7 +246,7 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
+    input$action_market
     
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
@@ -206,11 +260,15 @@ shinyServer(function(input, output,session) {
   
   # Now pass to ui.R what it needs to display this tab
   output$market <- renderPlot({  
+    input$action_market
+
     data_used = the_market_tab()
     pnl_plot(data_used)    
   })
   
   output$market_pnl_matrix<-renderHeatmap({ 
+    input$action_market
+    
     data_used = the_market_tab()
     pnl_matrix(data_used/100)
   })
@@ -228,12 +286,15 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
+    input$action_histogram_market
     
     data_used = the_market_tab()    
   })
   
   # Now pass to ui.R what it needs to display this tab
   output$histogram_market <- renderPlot({  
+    input$action_histogram_market
+
     data_used = the_market_histogram_tab()
     hist(data_used,main=paste(paste(paste("Histogram of Market Daily Returns from ",
                                           head(rownames(data_used),1), sep=""), "to ", sep=""),
@@ -252,8 +313,8 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
-    
+    input$action_market_mr
+        
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
     numb_components_used <- all_inputs$numb_components_used
@@ -268,11 +329,15 @@ shinyServer(function(input, output,session) {
   
   # Now pass to ui.R what it needs to display this tab
   output$mr_strategy <- renderPlot({        
+    input$action_market_mr
+    
     data_used = the_market_meanreversion_tab()
     pnl_plot(data_used)
   })
   
   output$mr_strategy_pnl_matrix<-renderHeatmap({ 
+    input$action_market_mr
+    
     data_used = the_market_meanreversion_tab()
     pnl_matrix(data_used/100)
   })
@@ -288,7 +353,7 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
+    input$action_market_mr_neg
     
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
@@ -304,56 +369,15 @@ shinyServer(function(input, output,session) {
   
   # Now pass to ui.R what it needs to display this tab
   output$both_markets <- renderPlot({        
+    input$action_market_mr_neg
     data_used = the_neg_market_meanreversion_tab()
     pnl_plot(data_used)
   })
   
   output$both_markets_pnl_matrix<-renderHeatmap({ 
+    input$action_market_mr_neg
     data_used = the_neg_market_meanreversion_tab()
     pnl_matrix(data_used/100)
-  })
-  
-  ########## The Ordered Stocks Tab
-  
-  # first the reactive function doing all calculations when the related inputs were modified by the user
-  
-  the_ordered_stocks_tab<-reactive({
-    # list the user inputs the tab depends on (easier to read the code)
-    input$datafile_name_coded
-    input$datafile_name
-    input$start_date
-    input$end_date
-    input$numb_components_used
-    input$order_criterion
-    
-    all_inputs <- user_inputs()
-    ProjectData <-  all_inputs$ProjectData
-    numb_components_used <- all_inputs$numb_components_used
-    use_mean_alpha <- all_inputs$use_mean_alpha
-    
-    use_stock = max(1, min(input$stock_order, ncol(ProjectData)))
-    if (input$order_criterion == "returns")
-      tmp=apply(ProjectData,2,sum)
-    if (input$order_criterion == "sharpe")
-      tmp=apply(ProjectData,2,sharpe)
-    if (input$order_criterion == "drawdown")
-      tmp=apply(ProjectData,2,function(r) -drawdown(r))
-    
-    chosen_id=sort(tmp,decreasing=TRUE,index.return=TRUE)$ix[use_stock]
-    chosen_stock=ProjectData[,chosen_id,drop=F]
-    rownames(chosen_stock)<-rownames(ProjectData)
-    chosen_stock
-  })
-  
-  # Now pass to ui.R what it needs to display this tab
-  output$chosen_stock <- renderPlot({  
-    chosen_stock=the_ordered_stocks_tab()
-    pnl_plot(chosen_stock)
-  })
-  
-  output$chosen_stock_pnl_matrix <- renderHeatmap({    
-    chosen_stock=the_ordered_stocks_tab()
-    pnl_matrix(chosen_stock/100)
   })
   
   ##############################################################################
@@ -370,7 +394,8 @@ shinyServer(function(input, output,session) {
     input$start_date
     input$end_date
     input$numb_components_used
-    
+    input$action_eigenvalues    
+    input$action_eigenvector    
     
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
@@ -446,11 +471,15 @@ shinyServer(function(input, output,session) {
   # since we computed most things above.
   
   output$eigen_plot <- renderPlot({  
+    input$action_eigenvalues    
+    
     complex_data <- heavy_computation()
     plot(complex_data$SP500_Eigenvalues,main="The S&P 500 Daily Returns Eigenvalues", ylab="Value")
   })
   
   output$eigen_returns <- renderPlot({   
+    input$action_eigenvector    
+
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
     complex_data <- heavy_computation()
@@ -466,6 +495,8 @@ shinyServer(function(input, output,session) {
   })
   
   output$eigen_strategy_pnl_matrix<-renderHeatmap({ 
+    input$action_eigenvector    
+
     ###### Just load all necessary variables so that we can use the code as is from the report
     all_inputs <- user_inputs()
     ProjectData <-  all_inputs$ProjectData
@@ -483,6 +514,7 @@ shinyServer(function(input, output,session) {
   })
   
   output$chosen_residual <- renderPlot({    
+    input$action_ordered_res
     complex_data <- heavy_computation()
     Stock_Residuals <- complex_data$Stock_Residuals
     market <- the_market_tab()
@@ -496,11 +528,15 @@ shinyServer(function(input, output,session) {
   })
   
   output$res_market <- renderPlot({    
+    input$action_market_res
+    
     complex_data <- heavy_computation()
     pnl_plot(complex_data$res_market)  
   })
   
-  output$res_hindsight <- renderPlot({    
+  output$res_hindsight <- renderPlot({   
+    input$action_hindsight
+    
     complex_data <- heavy_computation()
     pnl_plot(complex_data$selected_mr_market_res)
   })
