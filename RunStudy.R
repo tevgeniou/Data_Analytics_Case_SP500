@@ -64,8 +64,10 @@ if (start_local_webapp){
   
   # MAKE SURE THIS INSTALLS FINE if a local web app is to be use - the local computer needs
   # to have the shiny library to run the shiny apps
+
+  ### TO EDIT DEPENDING ON VERSION
   if (require(shiny) == FALSE) 
-    install_libraries("shiny")
+    install.packages("shiny")
   if (require(shinyRGL) == FALSE) 
     install_github("shinyRGL", "trestletech")
   if (require(shiny-incubator) == FALSE) 
